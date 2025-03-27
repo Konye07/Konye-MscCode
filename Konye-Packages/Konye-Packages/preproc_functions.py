@@ -12,6 +12,14 @@ import numpy as np
 import spacy
 from nltk.tokenize import sent_tokenize, word_tokenize
 import inflect
+from collections import Counter
+from nltk import pos_tag
+from nltk.stem import WordNetLemmatizer
+from nltk.corpus import wordnet
+from nltk.stem import PorterStemmer
+import numpy as np
+from tensorflow.keras.preprocessing.text import Tokenizer
+from tensorflow.keras.preprocessing.sequence import pad_sequences
 
 # Statisztikak dataframeekre
 
@@ -338,7 +346,7 @@ def spacy_preproc(df, text_column, new_column):
     return df
 
 
-## Negyedik, a számok szöveggévaló átalakítása
+## Negyedik, a számok szöveggévaló átalakítása ##
 
 def number_preproc(df, text_column, new_column):
     # SpaCy és inflect inicializálás egyszer
@@ -419,3 +427,184 @@ def number_preproc(df, text_column, new_column):
 
 
 
+#################### Masodik lepes nyelvi dolgok (lemmatizalas, stemming), 2 kulonbozo modszer ehhez ####################
+
+## Első a lemmatizálós ##
+
+def lemmat_processing(df, text_column, new_column):
+    # Inicializálás csak egyszer, ha még nem történt meg
+    if not hasattr(lemmat_processing, "lemmatizer"):
+        lemmat_processing.lemmatizer = WordNetLemmatizer()
+
+        def get_wordnet_pos(tag):
+            if tag.startswith('J'):
+                return wordnet.ADJ
+            elif tag.startswith('V'):
+                return wordnet.VERB
+            elif tag.startswith('N'):
+                return wordnet.NOUN
+            elif tag.startswith('R'):
+                return wordnet.ADV
+            else:
+                return wordnet.NOUN
+
+        lemmat_processing.get_wordnet_pos = get_wordnet_pos
+
+    lemmatizer = lemmat_processing.lemmatizer
+    get_wordnet_pos = lemmat_processing.get_wordnet_pos
+
+    def process_text(tokenized_sentences):
+        if isinstance(tokenized_sentences, str):
+            try:
+                tokenized_sentences = ast.literal_eval(tokenized_sentences)
+            except Exception as e:
+                print(f"Error converting string to list: {e}")
+                tokenized_sentences = []
+
+        processed_sentences = []
+        for sentence_tokens in tokenized_sentences:
+            if not isinstance(sentence_tokens, list):
+                continue
+
+            pos_tags = pos_tag(sentence_tokens)
+            lemmatized_tokens = []
+            for token, tag in pos_tags:
+                if token == "numtoken":
+                    lemmatized_tokens.append(token)
+                else:
+                    wordnet_pos = get_wordnet_pos(tag)
+                    lemmatized_token = lemmatizer.lemmatize(token, wordnet_pos)
+                    lemmatized_tokens.append(lemmatized_token)
+
+            processed_sentences.append(lemmatized_tokens)
+        return processed_sentences
+
+    df = df.copy()
+    df[new_column] = df[text_column].apply(process_text)
+
+    all_words = [word for sublist in df[new_column] for sentence in sublist for word in sentence if word != "numtoken"]
+    word_counts = Counter(all_words)
+
+    df[new_column] = df[new_column].apply(
+        lambda sentences: [
+            [word for word in sentence if word_counts[word] > 2]
+            for sentence in sentences
+        ]
+    )
+
+    df[new_column] = df[new_column].apply(
+        lambda sentences: [
+            [word for word in sentence if word.lower() not in ['reuters', 'washington']]
+            for sentence in sentences
+        ]
+    )
+
+    return df
+
+
+## Masodik a stemming-es ##
+
+
+def stemming_processing(df, text_column, new_column):
+    # Stemmer csak egyszer inicializálódik
+    if not hasattr(stemming_processing, "stemmer"):
+        stemming_processing.stemmer = PorterStemmer()
+    stemmer = stemming_processing.stemmer
+
+    def process_text(tokenized_sentences):
+        if isinstance(tokenized_sentences, str):
+            try:
+                tokenized_sentences = ast.literal_eval(tokenized_sentences)
+            except Exception as e:
+                print(f"Error converting string to list: {e}")
+                tokenized_sentences = []
+
+        processed_sentences = []
+        for sentence_tokens in tokenized_sentences:
+            if not isinstance(sentence_tokens, list):
+                continue
+
+            pos_tags = pos_tag(sentence_tokens)
+            stemmed_tokens = []
+            for token, tag in pos_tags:
+                if token == "numtoken":
+                    stemmed_tokens.append(token)
+                else:
+                    stemmed_token = stemmer.stem(token)
+                    stemmed_tokens.append(stemmed_token)
+
+            processed_sentences.append(stemmed_tokens)
+        return processed_sentences
+
+    df = df.copy()
+    df[new_column] = df[text_column].apply(process_text)
+
+    all_words = [word for sublist in df[new_column] for sentence in sublist for word in sentence if word != "numtoken"]
+    word_counts = Counter(all_words)
+
+    df[new_column] = df[new_column].apply(
+        lambda sentences: [
+            [word for word in sentence if word_counts[word] > 2]
+            for sentence in sentences
+        ]
+    )
+
+    df[new_column] = df[new_column].apply(
+        lambda sentences: [
+            [word for word in sentence if word.lower() not in ['reuters', 'washington']]
+            for sentence in sentences
+        ]
+    )
+
+    return df
+
+
+
+#################### Harmadik lépés a modellezéshez való felkészítés ####################
+
+## Meg kell előtte adni:
+# Max szókincs és szekvencia hossz
+# MAX_VOCAB_SIZE = 25000
+# MAX_LENGTH = 700
+# EMBEDDING_DIM = 300  # GloVe 300d
+
+
+
+# Tokenizálás és vektorizálás
+def prepare_for_modeling_with_glove(tokenized_texts, glove_file, tokenizer=None, fit_tokenizer=False):
+    # Tokenizer setup
+    if fit_tokenizer:
+        tokenizer = Tokenizer(num_words=MAX_VOCAB_SIZE, oov_token="<OOV>")
+        tokenizer.fit_on_texts(tokenized_texts)
+
+        # "numtoken" biztosítása a vocab-ban
+        if "numtoken" not in tokenizer.word_index:
+            tokenizer.word_index["numtoken"] = len(tokenizer.word_index) + 1
+            tokenizer.index_word[tokenizer.word_index["numtoken"]] = "numtoken"
+
+    # Tokenizált szövegek számsorrá alakítása
+    sequences = tokenizer.texts_to_sequences(tokenized_texts)
+
+    # Pad and truncate
+    padded_sequences = pad_sequences(sequences, maxlen=MAX_LENGTH, padding='pre', truncating='post')
+
+    # GloVe embeddings betöltése
+    embeddings_index = {}
+    with open(glove_file, 'r', encoding='utf-8') as f:
+        for line in f:
+            values = line.split()
+            word = values[0]
+            vector = np.asarray(values[1:], dtype='float32')
+            embeddings_index[word] = vector
+
+    word_index = tokenizer.word_index
+    embedding_matrix = np.zeros((MAX_VOCAB_SIZE, EMBEDDING_DIM))
+
+    # Embedding matrix
+    for word, i in word_index.items():
+        if i < MAX_VOCAB_SIZE:
+            embedding_vector = embeddings_index.get(word)
+            if embedding_vector is not None:
+                embedding_matrix[i] = embedding_vector
+
+    return padded_sequences, embedding_matrix, tokenizer
