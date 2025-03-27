@@ -10,6 +10,8 @@ from langdetect import detect
 from collections import Counter
 import numpy as np
 import spacy
+from nltk.tokenize import sent_tokenize, word_tokenize
+import inflect
 
 # Statisztikak dataframeekre
 
@@ -163,4 +165,257 @@ def remove_dates(text):
 def remove_phone_numbers(text):
     phone_pattern = r'\b(?:\+36\s?\d{1,2}|\(06[-\s]?\d{1,2}\)|06[-\s]?\d{1,2})[-.\s]?\d{3}[-.\s]?\d{4}\b'
     return re.sub(phone_pattern, '', text)
+
+################################### 3 lepeses preprocessing ###############################################
+#################### Elso lepes a zaj tisztitas, 4 kulonbozo modszer ehhez ####################
+
+## Elso, szakirodalom szerint szűrt spacy stopszavak ##
+
+def filtered_preproc(df, text_column, new_column):
+    if not hasattr(filtered_preproc, "nlp"):
+        filtered_preproc.nlp = spacy.load("en_core_web_sm")
+        stopwords = filtered_preproc.nlp.Defaults.stop_words
+        filtered_preproc.filtered_stopwords = {
+            word for word in stopwords
+            if filtered_preproc.nlp(word)[0].pos_ not in {"PRON", "ADV", "NOUN"}
+        }
+
+    filtered_stopwords = filtered_preproc.filtered_stopwords
+
+    def clean_text(text):
+        try:
+            text = remove_dates(text)
+            text = remove_phone_numbers(text)
+            text = text.lower()
+
+            phrases_to_remove = ['featured image', 'photo by', 'getty images']
+            pattern = r'\b(?:' + '|'.join(map(re.escape, phrases_to_remove)) + r')\b/?'
+            text = re.sub(pattern, '', text)
+            text = re.sub(r'\s+/|/\s+', ' ', text)
+            text = re.sub(r'\s+', ' ', text).strip()
+
+            text = contractions.fix(text)
+            text = re.sub(r'<.*?>', '', text)
+            text = re.sub(r'http\S+|www\.\S+', '', text)
+            text = re.sub(r'\b\d+\b', 'NUMTOKEN ', text)
+
+            sentences = sent_tokenize(text)
+            tokenized_sentences = []
+            for sentence in sentences:
+                sentence_clean = sentence.translate(str.maketrans('', '', string.punctuation))
+                sentence_clean = re.sub(r'[^a-z0-9\s]', '', sentence_clean).strip()
+                tokens = word_tokenize(sentence_clean)
+                filtered_tokens = [
+                    word for word in tokens
+                    if word not in filtered_stopwords and word not in {"s", "t"}
+                ]
+                tokenized_sentences.append(filtered_tokens)
+
+            return tokenized_sentences
+
+        except Exception as e:
+            print(f"Error processing text: {text}. Error: {e}")
+            return []
+
+    df = df.copy()
+    df[new_column] = df[text_column].fillna("").apply(clean_text)
+    return df
+
+
+## Masodik, összes stopszó bentmarad ##
+
+def preprocess_text(df, text_column, new_column):
+    def clean_text(text):
+        try:
+            # Dátum és telefonszám eltávolítása
+            text = remove_dates(text)
+            text = remove_phone_numbers(text)
+
+            # Lowercase
+            text = text.lower()
+
+            ########## Fake képek kifejezések eltávolítása#####
+            phrases_to_remove = ['featured image', 'photo by', 'getty images']
+
+            # A kifejezésekből regex minta készítése, figyelembe véve az opcionális perjelet és a szóhatárokat
+            pattern = r'\b(?:' + '|'.join(map(re.escape, phrases_to_remove)) + r')\b/?'
+
+            # A mintázat alkalmazása a szövegre
+            text = re.sub(pattern, '', text)
+
+            # Felesleges szóközök és perjelek eltávolítása
+            text = re.sub(r'\s+/|/\s+', ' ', text)
+            text = re.sub(r'\s+', ' ', text).strip()  # Többszörös szóközök és vezető/követő szóközök eltávolítása
+            ############################################################
+
+            # Contractions (don't -> do not)
+            text = contractions.fix(text)
+
+            # HTML és URL eltávolítása
+            text = re.sub(r'<.*?>', '', text)
+            text = re.sub(r'http\S+|www\.\S+', '', text)
+
+            # Számok helyettesítése "NUMTOKEN"-nel
+            text = re.sub(r'\b\d+\b', 'NUMTOKEN ', text)
+
+            # Mondat szegmentáció
+            sentences = sent_tokenize(text)
+
+            # Szó tokenizálás + stopword eltávolítás
+            tokenized_sentences = []
+            for sentence in sentences:
+                # Írásjelek eltávolítása
+                sentence_clean = sentence.translate(str.maketrans('', '', string.punctuation))
+                sentence_clean = re.sub(r'[^a-z0-9\s]', '', sentence_clean).strip()
+
+                # Tokenizálás
+                tokens = word_tokenize(sentence_clean)
+
+                tokenized_sentences.append(tokens)
+
+            return tokenized_sentences  # Listában tokenizált mondatok
+
+        except Exception as e:
+            print(f"Error processing text: {text}. Error: {e}")
+            return []
+
+    # Másolat hogy elkerülje az eredeti módosítását
+    df = df.copy()
+
+    # Alkalmazása
+    df[new_column] = df[text_column].fillna("").apply(clean_text)
+
+    # Return
+    return df
+
+
+## Harmadik, semmi stopszó sem marad bent
+
+def spacy_preproc(df, text_column, new_column):
+    if not hasattr(spacy_preproc, "nlp"):
+        spacy_preproc.nlp = spacy.load("en_core_web_sm")
+        spacy_preproc.stopwords = spacy_preproc.nlp.Defaults.stop_words
+
+    stopwords = spacy_preproc.stopwords
+
+    def clean_text(text):
+        try:
+            text = remove_dates(text)
+            text = remove_phone_numbers(text)
+            text = text.lower()
+
+            phrases_to_remove = ['featured image', 'photo by', 'getty images']
+            pattern = r'\b(?:' + '|'.join(map(re.escape, phrases_to_remove)) + r')\b/?'
+            text = re.sub(pattern, '', text)
+            text = re.sub(r'\s+/|/\s+', ' ', text)
+            text = re.sub(r'\s+', ' ', text).strip()
+
+            text = contractions.fix(text)
+            text = re.sub(r'<.*?>', '', text)
+            text = re.sub(r'http\S+|www\.\S+', '', text)
+            text = re.sub(r'\b\d+\b', 'NUMTOKEN ', text)
+
+            sentences = sent_tokenize(text)
+            tokenized_sentences = []
+            for sentence in sentences:
+                sentence_clean = sentence.translate(str.maketrans('', '', string.punctuation))
+                sentence_clean = re.sub(r'[^a-z0-9\s]', '', sentence_clean).strip()
+                tokens = word_tokenize(sentence_clean)
+                filtered_tokens = [
+                    word for word in tokens
+                    if word not in stopwords and word not in {"s", "t"}
+                ]
+                tokenized_sentences.append(filtered_tokens)
+
+            return tokenized_sentences
+
+        except Exception as e:
+            print(f"Error processing text: {text}. Error: {e}")
+            return []
+
+    df = df.copy()
+    df[new_column] = df[text_column].fillna("").apply(clean_text)
+    return df
+
+
+## Negyedik, a számok szöveggévaló átalakítása
+
+def number_preproc(df, text_column, new_column):
+    # SpaCy és inflect inicializálás egyszer
+    if not hasattr(number_preproc, "nlp"):
+        number_preproc.nlp = spacy.load("en_core_web_sm")
+        number_preproc.stopwords = number_preproc.nlp.Defaults.stop_words
+
+    if not hasattr(number_preproc, "inflect_engine"):
+        number_preproc.inflect_engine = inflect.engine()
+
+    stopwords = number_preproc.stopwords
+    inflect_engine = number_preproc.inflect_engine
+
+    def num_to_words(match):
+        num = match.group()
+        return inflect_engine.number_to_words(num)
+
+    def clean_text(text):
+        try:
+            # Dátum és telefonszám eltávolítása
+            text = remove_dates(text)
+            text = remove_phone_numbers(text)
+
+            # Lowercase
+            text = text.lower()
+
+            ########## Fake képek kifejezések eltávolítása#####
+            phrases_to_remove = ['featured image', 'photo by', 'getty images']
+
+            # A kifejezésekből regex minta készítése, figyelembe véve az opcionális perjelet és a szóhatárokat
+            pattern = r'\b(?:' + '|'.join(map(re.escape, phrases_to_remove)) + r')\b/?'
+
+            # A mintázat alkalmazása a szövegre
+            text = re.sub(pattern, '', text)
+
+            # Felesleges szóközök és perjelek eltávolítása
+            text = re.sub(r'\s+/|/\s+', ' ', text)
+            text = re.sub(r'\s+', ' ', text).strip()
+            ############################################################
+
+            # Contractions (don't -> do not)
+            text = contractions.fix(text)
+
+            # HTML és URL eltávolítása
+            text = re.sub(r'<.*?>', '', text)
+            text = re.sub(r'http\S+|www\.\S+', '', text)
+
+            # Számok helyettesítése angol szavakkal
+            text = re.sub(r'\b\d+\b', num_to_words, text)
+
+            # Mondat szegmentáció
+            sentences = sent_tokenize(text)
+
+            # Szó tokenizálás + stopword eltávolítás
+            tokenized_sentences = []
+            for sentence in sentences:
+                # Írásjelek eltávolítása
+                sentence_clean = sentence.translate(str.maketrans('', '', string.punctuation))
+                sentence_clean = re.sub(r'[^a-z0-9\s]', '', sentence_clean).strip()
+
+                # Tokenizálás
+                tokens = word_tokenize(sentence_clean)
+
+                # Stopword szűrés (minden spacy stopwordöt eltávolítunk)
+                filtered_tokens = [word for word in tokens if word not in stopwords]
+
+                tokenized_sentences.append(filtered_tokens)
+
+            return tokenized_sentences  # Listában tokenizált mondatok
+
+        except Exception as e:
+            print(f"Error processing text: {text}. Error: {e}")
+            return []
+
+    df = df.copy()
+    df[new_column] = df[text_column].fillna("").apply(clean_text)
+    return df
+
+
 
