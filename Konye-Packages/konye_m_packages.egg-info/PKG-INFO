@@ -1,0 +1,16 @@
+Metadata-Version: 2.4
+Name: konye-m-packages
+Version: 0.1.0
+Summary: A collection of preprocessing functions for text data
+Home-page: https://github.com/yourusername/konye-m-packages
+Author: Mate Konye
+Author-email: mate.konye@gmail.com
+License: MIT
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown
+Requires-Dist: spacy
+Requires-Dist: nltk
+Requires-Dist: contractions
