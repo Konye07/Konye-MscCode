@@ -75,7 +75,7 @@ print(f"A dataframe-nek {len(combined_df)} sora van.")
 print(combined_df['label'].value_counts())
 
 # Lefuttatás a data-ra
-cleaned_df = clean_dataset(combined_df)
+combined_df = clean_dataset(combined_df)
 
 print("Clean function lefuttatása után: ")
 print("combined_df['label'].value_counts()")
@@ -104,7 +104,7 @@ combined_df.head()
 # Splitting, train és test adatokra
 
 X_train, X_test, y_train, y_test = train_test_split(
-    cleaned_df['text'], cleaned_df['label'], test_size=0.2, stratify=cleaned_df['label'], random_state=42
+    combined_df['text'], combined_df['label'], test_size=0.2, stratify=combined_df['label'], random_state=42
 )
 
 # Vissza dataframe-é

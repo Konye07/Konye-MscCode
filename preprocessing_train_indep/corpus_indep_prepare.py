@@ -72,10 +72,10 @@ print(f"Sorok végső duplikáció eltávolítás után: {len(df_independent)}")
 print(f"További eltávolított duplikációk: {len(combined_data_dedup) - len(df_independent)}")
 analyze_text_column(df_independent, "df_independent")
 
-print(df_independent.value_counts('label'))
+df_independent = clean_dataset(df_independent)
 
 print("Clean function lefuttatása után: ")
-print("combined_df['label'].value_counts()")
+print(df_independent['label'].value_counts())
 
 # balanceolni a fake-real arányt
 # Elkülöníteni a két set-et
