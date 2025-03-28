@@ -3,6 +3,8 @@ from konye_m_packages import analyze_text_column, plot_most_common_words
 import pandas as pd
 from sklearn.utils import resample
 from sklearn.model_selection import train_test_split
+from langdetect import detect
+
 
 #### ISOT fájljai ####
 
@@ -26,9 +28,9 @@ analyze_text_column(df_real01, "df_real01")
 analyze_text_column(combined_isot, "combined_isot")
 
 # Plotok
-plot_most_common_words(df_fake01, "df_fake01")
+# plot_most_common_words(df_fake01, "df_fake01")
 
-plot_most_common_words(df_real01, "df_real01")
+# plot_most_common_words(df_real01, "df_real01")
 
 ### Misinf fájljai ###
 
@@ -50,9 +52,9 @@ analyze_text_column(df_real02, "df_real02")
 analyze_text_column(combined_isot, "combined_isot")
 
 # Plotok
-plot_most_common_words(df_fake02, "df_fake02")
+#plot_most_common_words(df_fake02, "df_fake02")
 
-plot_most_common_words(df_real02, "df_real02")
+#plot_most_common_words(df_real02, "df_real02")
 
 
 
