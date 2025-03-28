@@ -67,11 +67,11 @@ print(train_df2.head())
 print(independent_df2.head())
 
 
-train_df2.to_csv('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/third_method/train_elso.csv', index=False)
-test_df2.to_csv('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/third_method/teszt_elso.csv', index=False)
-independent_df2.to_csv('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/third_method/indep_elso.csv', index=False)
+train_df2.to_csv('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/third_method/train_harmadik.csv', index=False)
+test_df2.to_csv('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/third_method/teszt_harmadik.csv', index=False)
+independent_df2.to_csv('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/third_method/indep_harmadik.csv', index=False)
 
-print("Első két preprocessing módszer lefuttatva, kimentve. 95. sor a kódban lefutott.")
+print("Első két preprocessing módszer lefuttatva, kimentve. 74. sor a kódban lefutott.")
 
 
 #### Statisztika a cikkekre hogy mekkora legyen a length #### 
@@ -122,16 +122,16 @@ tokenized_test = test_df2['batch2'].tolist()
 
 
 # Train Tokenizer on training data
-padded_train01, embedding_matrix, tokenizer = prepare_for_modeling_with_glove(tokenized_train, glove_file, fit_tokenizer=True)
-padded_test01, _, _ = prepare_for_modeling_with_glove(tokenized_test, glove_file, tokenizer=tokenizer, fit_tokenizer=False)
-padded_indepednent01, _, _ = prepare_for_modeling_with_glove(tokenized_test, glove_file, tokenizer=tokenizer, fit_tokenizer=False)
+padded_train03, embedding_matrix, tokenizer = prepare_for_modeling_with_glove(tokenized_train, glove_file, fit_tokenizer=True)
+padded_test03, _, _ = prepare_for_modeling_with_glove(tokenized_test, glove_file, tokenizer=tokenizer, fit_tokenizer=False)
+padded_indepednent03, _, _ = prepare_for_modeling_with_glove(tokenized_test, glove_file, tokenizer=tokenizer, fit_tokenizer=False)
 
 # Mentés
-np.save('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/third_method/padded_train.npy', padded_train01)
+np.save('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/third_method/padded_train.npy', padded_train03)
 print("Harmadik function train fájlon pipa")
-np.save('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/third_method/padded_test.npy', padded_test01)
+np.save('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/third_method/padded_test.npy', padded_test03)
 print("Harmadik function test fájlon pipa")
-np.save('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/third_method/padded_test.npy', padded_indepednent01)
+np.save('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/third_method/padded_test.npy', padded_indepednent03)
 print("Harmadik function independent fájlon pipa")
 np.save('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/third_method/embedding_matrix.npy', embedding_matrix)
 print("Embedding fájl pipa")
