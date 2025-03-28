@@ -68,7 +68,7 @@ print(", ".join(sorted(removed_stopwords)))
 print(train_df.head())
 print(test_df.head())
 
-print("63. sorig lefutott")
+print("71. sorig lefutott")
 
 # Második adag preproc, lemmatizálás
 

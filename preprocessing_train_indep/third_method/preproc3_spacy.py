@@ -47,7 +47,7 @@ print("Első function lefutása pipa")
 print(train_df.head())
 print(test_df.head())
 
-print("63. sorig lefutott")
+print("50. sorig lefutott")
 
 # Második adag preproc, lemmatizálás
 
@@ -111,7 +111,7 @@ glove_file = 'd:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/databases/gl
 
 # Max szókincs és szekvencia hossz
 MAX_VOCAB_SIZE = 25000
-MAX_LENGTH = 700
+MAX_LENGTH = 500
 EMBEDDING_DIM = 300  # GloVe 300d
 
 
