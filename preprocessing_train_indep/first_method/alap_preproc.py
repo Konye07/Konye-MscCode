@@ -17,22 +17,30 @@ import numpy as np
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from konye_m_packages import __all__
-from konye_m_packages import filtered_preproc, lemmat_pre, prepare_for_modeling_with_glove
+from konye_m_packages import filtered_preproc, lemmat_processing, prepare_for_modeling_with_glove
 import pickle
+import nltk
 
-
+print("Importok pipa")
 ###### Első alappreprocessing #####
 
 # Szakirodalom szerint filtered spacy stopszó #
 
 test_df = pd.read_csv("d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/databases/test.csv")
 train_df = pd.read_csv("d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/databases/train.csv")
-independent_df = pd.read_csv("cpreprocessing_train_indep/databases/prepareed_independent.csv")
+independent_df = pd.read_csv("d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/databases/prepareed_independent.csv")
 
+
+print("Fájlok behívása pipa")
 
 test_df = filtered_preproc(test_df, text_column='text', new_column='batch1')
+print("Első function test fájlon pipa")
 train_df = filtered_preproc(train_df, text_column='text', new_column='batch1')
+print("Első function train fájlon pipa")
 independent_df = filtered_preproc(independent_df, text_column='text', new_column='batch1')
+print("Első function independent fájlon pipa")
+
+print("Első function lefutása pipa")
 
 nlp = spacy.load("en_core_web_sm")
 
@@ -64,9 +72,12 @@ print("63. sorig lefutott")
 
 # Második adag preproc, lemmatizálás
 
-train_df2 = lemmat_pre(train_df, text_column='batch1', new_column='batch2')
-test_df2 = lemmat_pre(test_df, text_column='batch1', new_column='batch2')
-independent_df2 = lemmat_pre(independent_df, text_column='batch1', new_column='batch2')
+train_df2 = lemmat_processing(train_df, text_column='batch1', new_column='batch2')
+print("Második function train fájlon pipa")
+test_df2 = lemmat_processing(test_df, text_column='batch1', new_column='batch2')
+print("Második function test fájlon pipa")
+independent_df2 = lemmat_processing(independent_df, text_column='batch1', new_column='batch2')
+print("Második function independent fájlon pipa")
 
 test_df2.drop(columns=['text', 'batch1'], inplace=True)
 train_df2.drop(columns=['text', 'batch1'], inplace=True)
@@ -81,7 +92,7 @@ train_df2.to_csv('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preproce
 test_df2.to_csv('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/first_method/teszt_elso.csv', index=False)
 independent_df2.to_csv('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/first_method/indep_elso.csv', index=False)
 
-# print("Első két preprocessing módszer lefuttatva, kimentve. 84. sor a kódban lefutott.")
+print("Első két preprocessing módszer lefuttatva, kimentve. 95. sor a kódban lefutott.")
 
 
 #### Statisztika a cikkekre hogy mekkora legyen a length #### 
@@ -138,9 +149,13 @@ padded_indepednent01, _, _ = prepare_for_modeling_with_glove(tokenized_test, glo
 
 # Mentés
 np.save('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/first_method/padded_train.npy', padded_train01)
+print("Harmadik function train fájlon pipa")
 np.save('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/first_method/padded_test.npy', padded_test01)
+print("Harmadik function test fájlon pipa")
 np.save('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/first_method/padded_test.npy', padded_indepednent01)
+print("Harmadik function independent fájlon pipa")
 np.save('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/first_method/embedding_matrix.npy', embedding_matrix)
+print("Embedding fájl pipa")
 
 # Tokenizer mentése
 with open('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/first_method/tokenizer.pkl', 'wb') as f:
