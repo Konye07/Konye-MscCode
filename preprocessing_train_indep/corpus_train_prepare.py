@@ -166,6 +166,6 @@ X_train, X_test, y_train, y_test = train_test_split(
 train_df = pd.DataFrame({'text': X_train, 'label': y_train})
 test_df = pd.DataFrame({'text': X_test, 'label': y_test})
 
-train_df.to_csv('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/databases/test.csv', index=False)
-test_df.to_csv('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/databases/train.csv', index=False)
+train_df.to_csv('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/databases/train.csv', index=False)
+test_df.to_csv('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/databases/test.csv', index=False)
 
