@@ -25,24 +25,6 @@ english_news['label'] = english_news['label'].apply(lambda x: 0 if x == 1 else 1
 
 print(analyze_text_column(english_news, "english_news"))
 
-# Nyelvi ellenőrzés
-# Angol szavak listájának betöltése
-english_vocab = set(words.words())
-
-def filter_english(text):
-    # Szavak tokenizálása, nem alfanumerikus karakterek eltávolítása
-    words_in_text = re.findall(r'\b[a-zA-Z]+\b', text)
-
-    # Csak az angol szókincsben szereplő szavakat tartjuk meg, kivéve 'sa' és 'na'
-    filtered_words = [word for word in words_in_text if word.lower() in english_vocab and word.lower() not in {'sa', 'na'}]
-
-    return ' '.join(filtered_words)
-
-# Szűrt szövegek
-english_news['text'] = english_news['text'].apply(filter_english)
-
-
-
 #### Másodjára a bs_detect ####
 
 # Betöltés: hamis hírek
@@ -81,7 +63,7 @@ print(f"Sorok duplikáció eltávolítás után: {len(combined_data_dedup)}")
 print(f"Eltávolított duplikációk: {len(combined_data) - len(combined_data_dedup)}")
 
 # Betöltés eredeti dataset
-existing_data = pd.read_csv("d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/databases/train.csv")
+existing_data = pd.read_csv("d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/databases/combined_data_deduplicated.csv")
 print(f"eredeti dataset dataset sorai: {len(existing_data)}")
 
 # # Ellenőrzini hogy van e ugyanolyan hír mindkettőben, ha igen akkor a fgtln-ből removeolni
@@ -90,7 +72,7 @@ print(f"Sorok végső duplikáció eltávolítás után: {len(df_independent)}")
 print(f"További eltávolított duplikációk: {len(combined_data_dedup) - len(df_independent)}")
 analyze_text_column(df_independent, "df_independent")
 
-df_independent = clean_dataset(df_independent)
+print(df_independent.value_counts('label'))
 
 # balanceolni a fake-real arányt
 # Elkülöníteni a két set-et
@@ -109,6 +91,9 @@ df_independent = balanced_df.sample(frac=1, random_state=42).reset_index(drop=Tr
 
 print(df_independent['label'].value_counts())
 
+df_independent = clean_dataset(df_independent)
+
+print(df_independent['label'].value_counts())
 
 # Mentés: végső deduplikált adatok
 df_independent.to_csv("d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/databases/prepareed_independent.csv", index=False)

@@ -1,5 +1,5 @@
 from konye_m_packages import __all__ # type: ignore
-from konye_m_packages import analyze_text_column, plot_most_common_words # type: ignore
+from konye_m_packages import analyze_text_column, clean_dataset, detect_language # type: ignore
 import pandas as pd # type: ignore
 from sklearn.utils import resample # type: ignore
 from sklearn.model_selection import train_test_split # type: ignore
@@ -51,12 +51,10 @@ analyze_text_column(df_fake02, "df_fake02")
 analyze_text_column(df_real02, "df_real02")
 analyze_text_column(combined_isot, "combined_isot")
 
-# Plotok
+# Plotok külön kódban
 #plot_most_common_words(df_fake02, "df_fake02")
 
 #plot_most_common_words(df_real02, "df_real02")
-
-
 
 # A négy külön fájl kombinálása
 combined_df = pd.concat([df_fake01, df_real01, df_fake02, df_real02], ignore_index=True)
@@ -100,58 +98,6 @@ print(combined_df['label'].value_counts())
 combined_df.to_csv('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/databases/combined_data_deduplicated.csv', index=False)
 combined_df.head()
 
-
-# Alap tisztitas elvegzese, angolnyelv-ures-stb
-# Nyelv felismerő function
-def detect_language(text):
-    try:
-        return detect(text)
-    except:
-        return "unknown"
-
-# Függvény a preprocessinghez
-def clean_dataset(dataframe):
-    # Adatok betöltése
-    df = dataframe
-
-    # Eredeti sorok száma
-    original_row_count = len(df)
-
-    # Számomra nem szükséges oszlop dropolása
-    df = df.drop('text_length', axis=1)
-
-    # A 'text' oszlop hiányzó értékeinek kitöltése üres karakterlánccal
-    df['text'] = df['text'].fillna("")
-
-    # Nyelv észlelése minden sorban és egy új oszlop hozzáadása
-    df['language'] = df['text'].apply(detect_language)
-
-    # Az olyan sorok kiszűrése, ahol a 'text' üres vagy nem angol nyelvű
-    df = df[(df['text'].str.strip() != "") & (df['language'] == 'en')]
-
-    # A sorok új számának rögzítése
-    cleaned_row_count = len(df)
-
-    # Az eltávolított sorok számának kiszámítása
-    rows_removed = original_row_count - cleaned_row_count
-
-    # Összegzés
-    print(f"Eredeti sorok száma: {original_row_count}")
-    print(f"Eltávolított sorok száma: {rows_removed}")
-    print(f"Sorok száma tisztítás után: {cleaned_row_count}")
-
-    # Ellenőrzés
-    remaining_non_english = df[df['language'] != 'en']
-    remaining_empty = df[df['text'].str.strip() == ""]
-
-    if not remaining_non_english.empty or not remaining_empty.empty:
-        print("Figyelmeztetés: Néhány nem angol nyelvű vagy üres sor marad a szűrés után.")
-        print(f"Nem angol sorok: {len(remaining_non_english)}")
-        print(f"Üres sorok: {len(remaining_empty)}")
-    else:
-        print("Az összes nem angol és üres szöveges sort sikeresen eltávolítotva.")
-
-    return df
 
 # Lefuttatás a data-ra
 cleaned_df = clean_dataset(combined_df)
