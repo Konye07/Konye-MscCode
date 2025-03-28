@@ -1,9 +1,9 @@
-from konye_m_packages import __all__
-from konye_m_packages import analyze_text_column, plot_most_common_words
-import pandas as pd
-from sklearn.utils import resample
-from sklearn.model_selection import train_test_split
-from langdetect import detect
+from konye_m_packages import __all__ # type: ignore
+from konye_m_packages import analyze_text_column, plot_most_common_words # type: ignore
+import pandas as pd # type: ignore
+from sklearn.utils import resample # type: ignore
+from sklearn.model_selection import train_test_split # type: ignore
+from langdetect import detect # type: ignore
 
 
 #### ISOT fájljai ####

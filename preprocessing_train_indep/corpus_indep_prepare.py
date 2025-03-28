@@ -1,13 +1,13 @@
-from konye_m_packages import __all__
-from konye_m_packages import analyze_text_column, clean_dataset
-import pandas as pd
-from sklearn.utils import resample
-from sklearn.model_selection import train_test_split
-from langdetect import detect
+from konye_m_packages import __all__ # type: ignore
+from konye_m_packages import analyze_text_column, clean_dataset # type: ignore
+import pandas as pd # type: ignore
+from sklearn.utils import resample # type: ignore
+from sklearn.model_selection import train_test_split # type: ignore
+from langdetect import detect # type: ignore
 import re
-import nltk
+import nltk # type: ignore
 nltk.download('words')
-from nltk.corpus import words
+from nltk.corpus import words # type: ignore
 
 #####Először fülöp-szigeteki angol hírek #####
 # Betöltés philip_english_news
