@@ -74,6 +74,9 @@ analyze_text_column(df_independent, "df_independent")
 
 print(df_independent.value_counts('label'))
 
+print("Clean function lefuttatása után: ")
+print("combined_df['label'].value_counts()")
+
 # balanceolni a fake-real arányt
 # Elkülöníteni a két set-et
 df_majority = df_independent[df_independent['label'] == 1]
@@ -88,10 +91,6 @@ df_majority_downsampled = resample(df_majority,
 balanced_df = pd.concat([df_majority_downsampled, df_minority])
 
 df_independent = balanced_df.sample(frac=1, random_state=42).reset_index(drop=True)
-
-print(df_independent['label'].value_counts())
-
-df_independent = clean_dataset(df_independent)
 
 print(df_independent['label'].value_counts())
 

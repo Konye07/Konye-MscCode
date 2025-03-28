@@ -72,8 +72,13 @@ combined_df = combined_df.drop_duplicates(subset=['text'], keep='first')
 # Ellenőrizni mennyi sor van bent leíráshoz viszonyítva
 print(f"A dataframe-nek {len(combined_df)} sora van.")
 
-label_counts = combined_df['label'].value_counts()
-print(label_counts)
+print(combined_df['label'].value_counts())
+
+# Lefuttatás a data-ra
+cleaned_df = clean_dataset(combined_df)
+
+print("Clean function lefuttatása után: ")
+print("combined_df['label'].value_counts()")
 
 # balanceolni a fake-real arányt
 # Elkülöníteni a két set-et
@@ -92,15 +97,9 @@ combined_df = balanced_df.sample(frac=1, random_state=42).reset_index(drop=True)
 
 print(combined_df['label'].value_counts())
 
-
-
 # Save the deduplicated dataframe to a new CSV file
 combined_df.to_csv('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/databases/combined_data_deduplicated.csv', index=False)
 combined_df.head()
-
-
-# Lefuttatás a data-ra
-cleaned_df = clean_dataset(combined_df)
 
 # Splitting, train és test adatokra
 
