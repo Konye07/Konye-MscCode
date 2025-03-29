@@ -128,11 +128,11 @@ padded_test05, _, _ = prepare_for_modeling_with_glove(tokenized_test, glove_file
 padded_indepednent05, _, _ = prepare_for_modeling_with_glove(tokenized_test, glove_file, tokenizer=tokenizer, fit_tokenizer=False)
 
 # Mentés
-np.save('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/fifth_method/padded_train.npy', padded_train05)
+np.save('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/fifth_method/padded_train05.npy', padded_train05)
 print("Harmadik function train fájlon pipa")
-np.save('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/fifth_method/padded_test.npy', padded_test05)
+np.save('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/fifth_method/padded_test05.npy', padded_test05)
 print("Harmadik function test fájlon pipa")
-np.save('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/fifth_method/padded_test.npy', padded_indepednent05)
+np.save('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/fifth_method/padded_indepednent05.npy', padded_indepednent05)
 print("Harmadik function independent fájlon pipa")
 np.save('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/fifth_method/embedding_matrix.npy', embedding_matrix)
 print("Embedding fájl pipa")
