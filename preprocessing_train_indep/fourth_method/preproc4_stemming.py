@@ -75,14 +75,17 @@ print("Első két preprocessing módszer lefuttatva, kimentve. 74. sor a kódban
 
 ### Model preparáló function ###
 
+train_df2 = pd.read_csv('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/fourth_method/train_negyedik.csv')
+test_df2 = pd.read_csv('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/fourth_method/teszt_negyedik.csv')
+independent_df2 = pd.read_csv('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/fourth_method/indep_negyedik.csv')
+
 # GloVe fájl elérési útja
 glove_file = 'd:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/databases/glove.6B.300d.txt'
 
 # Max szókincs és szekvencia hossz
 MAX_VOCAB_SIZE = 25000
-MAX_LENGTH = 500
+MAX_LENGTH = 600
 EMBEDDING_DIM = 300  # GloVe 300d
-
 
 # Szövegek előkészítése modellezéshez
 tokenized_train = train_df2['batch2'].tolist()

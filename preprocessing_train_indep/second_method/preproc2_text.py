@@ -11,11 +11,12 @@ from nltk.tokenize import sent_tokenize, word_tokenize # type: ignore
 import inflect # type: ignore
 from nltk import pos_tag # type: ignore
 from nltk.stem import WordNetLemmatizer # type: ignore
-from nltk.corpus import wordnet # type: ignore 
+from nltk.corpus import wordnet # type: ignore
 from nltk.stem import PorterStemmer # type: ignore
 import numpy as np # type: ignore
 from tensorflow.keras.preprocessing.text import Tokenizer # type: ignore
 from tensorflow.keras.preprocessing.sequence import pad_sequences # type: ignore
+import konye_m_packages # type: ignore
 from konye_m_packages import __all__ # type: ignore
 from konye_m_packages import preprocess_text, lemmat_processing, prepare_for_modeling_with_glove # type: ignore
 import pickle
@@ -73,6 +74,10 @@ independent_df2.to_csv('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/pr
 
 print("Első két preprocessing módszer lefuttatva, kimentve. 74. sor a kódban lefutott.")
 
+train_df2 = pd.read_csv('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/second_method/train_masodik.csv')
+test_df2 = pd.read_csv('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/second_method/teszt_masodik.csv')
+independent_df2 = pd.read_csv('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/second_method/indep_masodik.csv')
+
 ### Model preparáló function ###
 
 # GloVe fájl elérési útja
@@ -80,7 +85,7 @@ glove_file = 'd:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessin
 
 # Max szókincs és szekvencia hossz
 MAX_VOCAB_SIZE = 25000
-MAX_LENGTH = 700
+MAX_LENGTH = 600
 EMBEDDING_DIM = 300  # GloVe 300d
 
 # Szövegek előkészítése modellezéshez

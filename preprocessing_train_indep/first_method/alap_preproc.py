@@ -16,6 +16,7 @@ from nltk.stem import PorterStemmer # type: ignore
 import numpy as np # type: ignore
 from tensorflow.keras.preprocessing.text import Tokenizer # type: ignore
 from tensorflow.keras.preprocessing.sequence import pad_sequences # type: ignore
+import konye_m_packages # type: ignore
 from konye_m_packages import __all__ # type: ignore
 from konye_m_packages import filtered_preproc, lemmat_processing, prepare_for_modeling_with_glove # type: ignore
 import pickle
@@ -93,6 +94,11 @@ test_df2.to_csv('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preproces
 independent_df2.to_csv('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/first_method/indep_elso.csv', index=False)
 
 print("Első két preprocessing módszer lefuttatva, kimentve. 95. sor a kódban lefutott.")
+print(independent_df2.head())
+
+train_df2 = pd.read_csv('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/first_method/train_elso.csv')
+test_df2 = pd.read_csv('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/first_method/teszt_elso.csv')
+independent_df2 = pd.read_csv('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/first_method/indep_elso.csv')
 
 ### Model preparáló function ###
 
@@ -101,7 +107,7 @@ glove_file = 'd:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessin
 
 # Max szókincs és szekvencia hossz
 MAX_VOCAB_SIZE = 25000
-MAX_LENGTH = 700
+MAX_LENGTH = 600
 EMBEDDING_DIM = 300  # GloVe 300d
 
 
