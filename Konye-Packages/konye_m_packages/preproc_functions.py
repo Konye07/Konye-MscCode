@@ -571,10 +571,12 @@ def stemming_processing(df, text_column, new_column):
 
 
 # Tokenizálás és vektorizálás
-def prepare_for_modeling_with_glove(tokenized_texts, glove_file, tokenizer=None, fit_tokenizer=False):
+def prepare_for_modeling_with_glove(tokenized_texts, glove_file,
+                                    tokenizer=None, fit_tokenizer=False,
+                                    max_vocab_size=25000, max_length=700, embedding_dim=300):
     # Tokenizer setup
     if fit_tokenizer:
-        tokenizer = Tokenizer(num_words=MAX_VOCAB_SIZE, oov_token="<OOV>")
+        tokenizer = Tokenizer(num_words=max_vocab_size, oov_token="<OOV>")
         tokenizer.fit_on_texts(tokenized_texts)
 
         # "numtoken" biztosítása a vocab-ban
@@ -586,7 +588,7 @@ def prepare_for_modeling_with_glove(tokenized_texts, glove_file, tokenizer=None,
     sequences = tokenizer.texts_to_sequences(tokenized_texts)
 
     # Pad and truncate
-    padded_sequences = pad_sequences(sequences, maxlen=MAX_LENGTH, padding='pre', truncating='post')
+    padded_sequences = pad_sequences(sequences, maxlen=max_length, padding='pre', truncating='post')
 
     # GloVe embeddings betöltése
     embeddings_index = {}
@@ -598,11 +600,11 @@ def prepare_for_modeling_with_glove(tokenized_texts, glove_file, tokenizer=None,
             embeddings_index[word] = vector
 
     word_index = tokenizer.word_index
-    embedding_matrix = np.zeros((MAX_VOCAB_SIZE, EMBEDDING_DIM))
+    embedding_matrix = np.zeros((max_vocab_size, embedding_dim))
 
     # Embedding matrix
     for word, i in word_index.items():
-        if i < MAX_VOCAB_SIZE:
+        if i < max_vocab_size:
             embedding_vector = embeddings_index.get(word)
             if embedding_vector is not None:
                 embedding_matrix[i] = embedding_vector
