@@ -2,7 +2,9 @@ MSc Szakdolgozat – LSTM és GRU Neurális Hálók Teljesítményének Összeha
 
 Ez a GitHub repozitórium az Eötvös Loránd Tudományegyetem Survey Statisztika és Adatanalitika mesterszakán készített szakdolgozathoz tartozó teljes kódot tartalmazza.
 Szakdolgozat címe: LSTM és GRU neurális hálózatok teljesítményének összehasonlítása álhírek osztályozásában különböző előfeldolgozási stratégiákkal
+
 Szerző: Könye Máté
+
 Év: 2025
 
 Projektleírás:
