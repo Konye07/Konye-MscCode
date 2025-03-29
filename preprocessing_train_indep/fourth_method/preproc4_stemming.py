@@ -16,7 +16,7 @@ from nltk.stem import PorterStemmer # type: ignore
 import numpy as np # type: ignore
 from tensorflow.keras.preprocessing.text import Tokenizer # type: ignore
 from tensorflow.keras.preprocessing.sequence import pad_sequences # type: ignore
-from konye_m_packages import  # type: ignore
+from konye_m_packages import __all__ # type: ignore
 from konye_m_packages import spacy_preproc, stemming_processing, prepare_for_modeling_with_glove # type: ignore
 import pickle
 import nltk # type: ignore
@@ -127,7 +127,7 @@ np.save('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_tra
 print("Harmadik function test fájlon pipa")
 np.save('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/fourth_method/padded_independent04.npy', padded_independent04)
 print("Harmadik function independent fájlon pipa")
-np.save('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/fifourth_methodrst_method/embedding_matrix.npy', embedding_matrix)
+np.save('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/fourth_method/embedding_matrix.npy', embedding_matrix)
 print("Embedding fájl pipa")
 
 # Tokenizer mentése
