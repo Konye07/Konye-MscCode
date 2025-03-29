@@ -78,14 +78,18 @@ print("Első két preprocessing módszer lefuttatva, kimentve. 74. sor a kódban
 
 df_all_batch2 = pd.concat([train_df2, test_df2, independent_df2], ignore_index=True)
 
-# Szavak hosszának összegyűjtése minden cikkből
 word_counts = []
 
 for index, row in df_all_batch2.iterrows():
-    article = eval(row["batch2"]) 
-    if isinstance(article, list):
-        word_count = sum(len(sentence) for sentence in article)
-        word_counts.append(word_count)
+    try:
+        article = ast.literal_eval(row["batch2"])  # Biztonságos értékelés
+        if isinstance(article, list):
+            word_count = sum(len(sentence) for sentence in article)
+            word_counts.append(word_count)
+        else:
+            print(f"Nem lista típus a(z) {index}. sorban: {type(article)}")
+    except Exception as e:
+        print(f"Hiba a(z) {index}. sorban: {e}")
 
 # Alapvető statisztikák kiszámítása
 word_stats = {
@@ -97,41 +101,59 @@ word_stats = {
     "Kvartilisek (25-50-75-90%)": np.percentile(word_counts, [25, 50, 75, 90])
 }
 
-# Statisztikák megjelenítése táblázatban
 df_word_stats = pd.DataFrame.from_dict(word_stats, orient="index", columns=["Érték"])
-
-# Eredmények kiírása
 print(df_word_stats)
-
 
 ### Model preparáló function ###
 
 # GloVe fájl elérési útja
-glove_file = 'd:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/databases/glove.6B.300d.txt'
+glove_file = 'd:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/databases/glove.6B.300d.txt'
 
 # Max szókincs és szekvencia hossz
 MAX_VOCAB_SIZE = 25000
-MAX_LENGTH = 500
+MAX_LENGTH = 700
 EMBEDDING_DIM = 300  # GloVe 300d
 
 
 # Szövegek előkészítése modellezéshez
 tokenized_train = train_df2['batch2'].tolist()
 tokenized_test = test_df2['batch2'].tolist()
-tokenized_test = test_df2['batch2'].tolist()
+tokenized_independent = independent_df2['batch2'].tolist()
 
 
 # Train Tokenizer on training data
-padded_train03, embedding_matrix, tokenizer = prepare_for_modeling_with_glove(tokenized_train, glove_file, fit_tokenizer=True)
-padded_test03, _, _ = prepare_for_modeling_with_glove(tokenized_test, glove_file, tokenizer=tokenizer, fit_tokenizer=False)
-padded_indepednent03, _, _ = prepare_for_modeling_with_glove(tokenized_test, glove_file, tokenizer=tokenizer, fit_tokenizer=False)
+padded_train03, embedding_matrix, tokenizer = prepare_for_modeling_with_glove(
+    tokenized_train, glove_file,
+    fit_tokenizer=True,
+    max_vocab_size=MAX_VOCAB_SIZE,
+    max_length=MAX_LENGTH,
+    embedding_dim=EMBEDDING_DIM
+)
+
+padded_test03, _, _ = prepare_for_modeling_with_glove(
+    tokenized_test, glove_file,
+    tokenizer=tokenizer,
+    fit_tokenizer=False,
+    max_vocab_size=MAX_VOCAB_SIZE,
+    max_length=MAX_LENGTH,
+    embedding_dim=EMBEDDING_DIM
+)
+
+padded_independent03, _, _ = prepare_for_modeling_with_glove(
+    tokenized_independent, glove_file,
+    tokenizer=tokenizer,
+    fit_tokenizer=False,
+    max_vocab_size=MAX_VOCAB_SIZE,
+    max_length=MAX_LENGTH,
+    embedding_dim=EMBEDDING_DIM
+)
 
 # Mentés
 np.save('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/third_method/padded_train03.npy', padded_train03)
 print("Harmadik function train fájlon pipa")
 np.save('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/third_method/padded_test03.npy', padded_test03)
 print("Harmadik function test fájlon pipa")
-np.save('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/third_method/padded_indepednent03.npy', padded_indepednent03)
+np.save('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/third_method/padded_independent03.npy', padded_independent03)
 print("Harmadik function independent fájlon pipa")
 np.save('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/third_method/embedding_matrix.npy', embedding_matrix)
 print("Embedding fájl pipa")
