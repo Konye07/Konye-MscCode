@@ -1,3 +1,4 @@
+__version__ = "0.1.2"
 
 from .preproc_functions import (
     analyze_text_column,
