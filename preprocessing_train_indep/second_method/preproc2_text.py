@@ -22,9 +22,9 @@ import pickle
 import nltk # type: ignore
 
 print("Importok pipa")
-###### Első alappreprocessing #####
+###### Második preprocessing #####
 
-# Szakirodalom szerint filtered spacy stopszó #
+# Minden stopszó benthagyása #
 
 test_df = pd.read_csv("d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/databases/test.csv")
 train_df = pd.read_csv("d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/databases/train.csv")
@@ -73,37 +73,6 @@ independent_df2.to_csv('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/pr
 
 print("Első két preprocessing módszer lefuttatva, kimentve. 74. sor a kódban lefutott.")
 
-
-#### Statisztika a cikkekre hogy mekkora legyen a length #### 
-
-df_all_batch2 = pd.concat([train_df2, test_df2, independent_df2], ignore_index=True)
-
-word_counts = []
-
-for index, row in df_all_batch2.iterrows():
-    try:
-        article = ast.literal_eval(row["batch2"])  # Biztonságos értékelés
-        if isinstance(article, list):
-            word_count = sum(len(sentence) for sentence in article)
-            word_counts.append(word_count)
-        else:
-            print(f"Nem lista típus a(z) {index}. sorban: {type(article)}")
-    except Exception as e:
-        print(f"Hiba a(z) {index}. sorban: {e}")
-
-# Alapvető statisztikák kiszámítása
-word_stats = {
-    "Átlagos szószám": np.mean(word_counts),
-    "Medián": np.median(word_counts),
-    "Min szószám": np.min(word_counts),
-    "Max szószám": np.max(word_counts),
-    "Szórás": np.std(word_counts),
-    "Kvartilisek (25-50-75-90%)": np.percentile(word_counts, [25, 50, 75, 90])
-}
-
-df_word_stats = pd.DataFrame.from_dict(word_stats, orient="index", columns=["Érték"])
-print(df_word_stats)
-
 ### Model preparáló function ###
 
 # GloVe fájl elérési útja
@@ -114,12 +83,10 @@ MAX_VOCAB_SIZE = 25000
 MAX_LENGTH = 700
 EMBEDDING_DIM = 300  # GloVe 300d
 
-
 # Szövegek előkészítése modellezéshez
 tokenized_train = train_df2['batch2'].tolist()
 tokenized_test = test_df2['batch2'].tolist()
 tokenized_independent = independent_df2['batch2'].tolist()
-
 
 # Train Tokenizer on training data
 padded_train02, embedding_matrix, tokenizer = prepare_for_modeling_with_glove(

@@ -94,36 +94,6 @@ independent_df2.to_csv('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/pr
 
 print("Első két preprocessing módszer lefuttatva, kimentve. 95. sor a kódban lefutott.")
 
-#### Statisztika a cikkekre hogy mekkora legyen a length #### 
-
-df_all_batch2 = pd.concat([train_df2, test_df2, independent_df2], ignore_index=True)
-
-word_counts = []
-
-for index, row in df_all_batch2.iterrows():
-    try:
-        article = ast.literal_eval(row["batch2"])  # Biztonságos értékelés
-        if isinstance(article, list):
-            word_count = sum(len(sentence) for sentence in article)
-            word_counts.append(word_count)
-        else:
-            print(f"Nem lista típus a(z) {index}. sorban: {type(article)}")
-    except Exception as e:
-        print(f"Hiba a(z) {index}. sorban: {e}")
-
-# Alapvető statisztikák kiszámítása
-word_stats = {
-    "Átlagos szószám": np.mean(word_counts),
-    "Medián": np.median(word_counts),
-    "Min szószám": np.min(word_counts),
-    "Max szószám": np.max(word_counts),
-    "Szórás": np.std(word_counts),
-    "Kvartilisek (25-50-75-90%)": np.percentile(word_counts, [25, 50, 75, 90])
-}
-
-df_word_stats = pd.DataFrame.from_dict(word_stats, orient="index", columns=["Érték"])
-print(df_word_stats)
-
 ### Model preparáló function ###
 
 # GloVe fájl elérési útja
