@@ -7,7 +7,7 @@ Szerző: Könye Máté
 
 Év: 2025
 
-Projektleírás:
+Leírás:
 
 A szakdolgozat célja, hogy különböző szöveg-előfeldolgozási stratégiák hatását vizsgálja a mélytanulási modellek –  LSTM és GRU – teljesítményére az álhírek automatikus osztályozásának kontextusában. 
 A vizsgálat során többféle előfeldolgozási megközelítést alkalmaztam, majd ezek hatását külön-külön értékeltem azonos adatbázisokon, különféle tanító-, teszt- és független (independent) adathalmazok felhasználásával.
@@ -47,4 +47,4 @@ Colab linkek:
 A notebookok elérhetőségeit külön fájlban (colab_links.txt) tüntettem fel.
 
 Korpuszok:
-Az adatok nagy méretük miatt nem szerepelnek közvetlenül a repóban. Az összes használt adathalmaz elérhetősége külön .txt fájlban található, forrásonként megjelölve.
+Az összes adat nagy méretük miatt nem szerepelnek közvetlenül a repóban. Az összes használt adathalmaz elérhetősége külön .txt fájlban található, forrásonként megjelölve.
