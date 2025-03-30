@@ -17,9 +17,10 @@ import numpy as np # type: ignore
 from tensorflow.keras.preprocessing.text import Tokenizer # type: ignore
 from tensorflow.keras.preprocessing.sequence import pad_sequences # type: ignore
 from konye_m_packages import __all__ # type: ignore
-from konye_m_packages import number_preproc, lemmat_processing, prepare_for_modeling_with_glove # type: ignore
+from konye_m_packages import number_preproc, lemmat_processing, prepare_for_modeling_with_glove, remove_dates,remove_phone_numbers  # type: ignore
 import pickle
 import nltk # type: ignore
+import contractions # type: ignore
 
 print("Importok pipa")
 ###### Ötödik preprocessing #####
@@ -33,12 +34,78 @@ independent_df = pd.read_csv("d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscC
 
 print("Fájlok behívása pipa")
 
-test_df = number_preproc(test_df, text_column='text', new_column='batch1')
+########## Nem jó a packages szám-function mert minden stopszót eltávolít, viszont nekem kell mivel az a modellem volt a legjobb ########
+########## Ezért itt újra definiálom a függvényt ############
+
+def number_preproc2(df, text_column, new_column):
+    if not hasattr(number_preproc2, "inflect_engine"):
+        number_preproc2.inflect_engine = inflect.engine()
+
+    inflect_engine = number_preproc2.inflect_engine
+
+    def num_to_words(match):
+        num = match.group()
+        return inflect_engine.number_to_words(num)
+
+    def clean_text(text):
+        try:
+            # Dátum és telefonszám eltávolítása
+            text = remove_dates(text)
+            text = remove_phone_numbers(text)
+
+            # Lowercase
+            text = text.lower()
+
+            ########## Fake képek kifejezések eltávolítása#####
+            phrases_to_remove = ['featured image', 'photo by', 'getty images']
+            pattern = r'\b(?:' + '|'.join(map(re.escape, phrases_to_remove)) + r')\b/?'
+            text = re.sub(pattern, '', text)
+
+            text = re.sub(r'\s+/|/\s+', ' ', text)
+            text = re.sub(r'\s+', ' ', text).strip()
+            ####################################################
+
+            # Contractions (don't -> do not)
+            text = contractions.fix(text)
+
+            # HTML és URL eltávolítása
+            text = re.sub(r'<.*?>', '', text)
+            text = re.sub(r'http\S+|www\.\S+', '', text)
+
+            # Számok helyettesítése angol szavakkal
+            text = re.sub(r'\b\d+\b', num_to_words, text)
+
+            # Mondat szegmentáció
+            sentences = sent_tokenize(text)
+
+            # Szó tokenizálás stopword eltávolítás nélkül
+            tokenized_sentences = []
+            for sentence in sentences:
+                # Írásjelek eltávolítása
+                sentence_clean = sentence.translate(str.maketrans('', '', string.punctuation))
+                sentence_clean = re.sub(r'[^a-z0-9\s]', '', sentence_clean).strip()
+
+                # Tokenizálás
+                tokens = word_tokenize(sentence_clean)
+
+                tokenized_sentences.append(tokens)
+
+            return tokenized_sentences  # Listában tokenizált mondatok
+
+        except Exception as e:
+            print(f"Error processing text: {text}. Error: {e}")
+            return []
+
+    df = df.copy()
+    df[new_column] = df[text_column].fillna("").apply(clean_text)
+    return df
+
+test_df = number_preproc2(test_df, text_column='text', new_column='batch1')
 print("Első function test fájlon pipa")
 print(test_df.head())
-train_df = number_preproc(train_df, text_column='text', new_column='batch1')
+train_df = number_preproc2(train_df, text_column='text', new_column='batch1')
 print("Első function train fájlon pipa")
-independent_df = number_preproc(independent_df, text_column='text', new_column='batch1')
+independent_df = number_preproc2(independent_df, text_column='text', new_column='batch1')
 print("Első function independent fájlon pipa")
 
 print("Első function lefutása pipa")

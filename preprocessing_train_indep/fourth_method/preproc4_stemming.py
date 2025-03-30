@@ -17,7 +17,7 @@ import numpy as np # type: ignore
 from tensorflow.keras.preprocessing.text import Tokenizer # type: ignore
 from tensorflow.keras.preprocessing.sequence import pad_sequences # type: ignore
 from konye_m_packages import __all__ # type: ignore
-from konye_m_packages import spacy_preproc, stemming_processing, prepare_for_modeling_with_glove # type: ignore
+from konye_m_packages import preprocess_text, stemming_processing, prepare_for_modeling_with_glove # type: ignore
 import pickle
 import nltk # type: ignore
 
@@ -33,11 +33,11 @@ independent_df = pd.read_csv("d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscC
 
 print("Fájlok behívása pipa")
 
-test_df = spacy_preproc(test_df, text_column='text', new_column='batch1')
+test_df = preprocess_text(test_df, text_column='text', new_column='batch1')
 print("Első function test fájlon pipa")
-train_df = spacy_preproc(train_df, text_column='text', new_column='batch1')
+train_df = preprocess_text(train_df, text_column='text', new_column='batch1')
 print("Első function train fájlon pipa")
-independent_df = spacy_preproc(independent_df, text_column='text', new_column='batch1')
+independent_df = preprocess_text(independent_df, text_column='text', new_column='batch1')
 print("Első function independent fájlon pipa")
 
 print("Első function lefutása pipa")
