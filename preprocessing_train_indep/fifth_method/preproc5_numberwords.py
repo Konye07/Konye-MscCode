@@ -139,7 +139,7 @@ train_df2.to_csv('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preproce
 test_df2.to_csv('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/fifth_method/teszt_otodik.csv', index=False)
 independent_df2.to_csv('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/fifth_method/indep_otodik.csv', index=False)
 
-print("Első két preprocessing módszer lefuttatva, kimentve. 75. sor a kódban lefutott.")
+print("Első két preprocessing módszer lefuttatva, kimentve. 142. sor a kódban lefutott.")
 
 ### Model preparáló function ###
 
