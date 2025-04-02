@@ -36,15 +36,12 @@ Előfeldolgozási stratégiák
 
 LSTM és GRU modellek
 
-A neurális hálók (LSTM és GRU) implementációja Google Colab környezetben történt, a GPU-gyorsítás biztosítása érdekében. A következők találhatók meg a notebook-linkeken:
+A neurális hálók (LSTM és GRU) implementációja Google Colab környezetben történt:
   Modellarchitektúrák
   Betöltött és előkészített adatok
   Tanítási és validálási metrikák
   Konfúziós mátrixok, F1-score, accuracy
   Különböző plotok
-
-Colab linkek:
-A notebookok elérhetőségeit külön fájlban (colab_links.txt) tüntettem fel.
 
 Korpuszok:
 Az összes adat nagy méretük miatt nem szerepelnek közvetlenül a repóban. Az összes használt adathalmaz elérhetősége külön .txt fájlban található, forrásonként megjelölve.
