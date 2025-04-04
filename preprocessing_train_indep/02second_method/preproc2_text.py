@@ -68,15 +68,15 @@ print(train_df2.head())
 print(independent_df2.head())
 
 
-train_df2.to_csv('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/second_method/train_masodik.csv', index=False)
-test_df2.to_csv('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/second_method/teszt_masodik.csv', index=False)
-independent_df2.to_csv('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/second_method/indep_masodik.csv', index=False)
+train_df2.to_csv('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/02second_method/train_masodik.csv', index=False)
+test_df2.to_csv('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/02second_method/teszt_masodik.csv', index=False)
+independent_df2.to_csv('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/02second_method/indep_masodik.csv', index=False)
 
 print("Első két preprocessing módszer lefuttatva, kimentve. 74. sor a kódban lefutott.")
 
-train_df2 = pd.read_csv('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/second_method/train_masodik.csv')
-test_df2 = pd.read_csv('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/second_method/teszt_masodik.csv')
-independent_df2 = pd.read_csv('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/second_method/indep_masodik.csv')
+train_df2 = pd.read_csv('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/02second_method/train_masodik.csv')
+test_df2 = pd.read_csv('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/02second_method/teszt_masodik.csv')
+independent_df2 = pd.read_csv('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/02second_method/indep_masodik.csv')
 
 ### Model preparáló function ###
 
@@ -122,15 +122,15 @@ padded_independent02, _, _ = prepare_for_modeling_with_glove(
 
 
 # Mentés
-np.save('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/second_method/padded_train02.npy', padded_train02)
+np.save('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/02second_method/padded_train02.npy', padded_train02)
 print("Harmadik function train fájlon pipa")
-np.save('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/second_method/padded_test02.npy', padded_test02)
+np.save('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/02second_method/padded_test02.npy', padded_test02)
 print("Harmadik function test fájlon pipa")
-np.save('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/second_method/padded_independent02.npy', padded_independent02)
+np.save('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/02second_method/padded_independent02.npy', padded_independent02)
 print("Harmadik function independent fájlon pipa")
-np.save('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/second_method/embedding_matrix.npy', embedding_matrix)
+np.save('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/02second_method/embedding_matrix.npy', embedding_matrix)
 print("Embedding fájl pipa")
 
 # Tokenizer mentése
-with open('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/second_method/tokenizer.pkl', 'wb') as f:
+with open('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/02second_method/tokenizer.pkl', 'wb') as f:
     pickle.dump(tokenizer, f)

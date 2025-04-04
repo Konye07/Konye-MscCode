@@ -48,14 +48,14 @@ print("Lemmatizálás rész pipa")
 
 print(sajat_df2.head())
 
-sajat_df2.to_csv("d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/first_method/own_elso.csv", index=False)
+sajat_df2.to_csv("d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/01first_method/own_elso.csv", index=False)
 
 print("Saját cikkek kimentve")
 print(sajat_df2.value_counts("label"))
 
 
 ### Model preparáló function ###
-sajat_df2 = pd.read_csv("d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/first_method/own_elso.csv")
+sajat_df2 = pd.read_csv("d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/01first_method/own_elso.csv")
 
 # GloVe fájl elérési útja
 glove_file = 'd:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/databases/glove.6B.300d.txt'
@@ -65,17 +65,17 @@ MAX_VOCAB_SIZE = 25000
 MAX_LENGTH = 600
 EMBEDDING_DIM = 300  # GloVe 300d
 
-sajat_df2 = pd.read_csv("d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/first_method/own_elso.csv")
+sajat_df2 = pd.read_csv("d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/01first_method/own_elso.csv")
 
 # Szövegek előkészítése modellezéshez
 tokenized_sajat = sajat_df2['batch2'].tolist()
 
 # Tokenizer betöltése
-with open('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/first_method/tokenizer.pkl', 'rb') as f:
+with open('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/01first_method/tokenizer.pkl', 'rb') as f:
     tokenizer = pickle.load(f)
 
 # Embedding mátrix betöltése
-embedding_matrix = np.load('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/first_method/embedding_matrix.npy')
+embedding_matrix = np.load('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/01first_method/embedding_matrix.npy')
 
 # Szövegek padding-elése a betöltött tokenizer-rel
 padded_sajat, _, _ = prepare_for_modeling_with_glove(
@@ -89,5 +89,5 @@ padded_sajat, _, _ = prepare_for_modeling_with_glove(
 )
 
 # Mentés
-np.save('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/first_method/padded_sajat.npy', padded_sajat)
+np.save('d:/Egyetem/01Ma_Survey/Szakdolgozat/kod/Konye-MscCode/preprocessing_train_indep/01first_method/padded_sajat.npy', padded_sajat)
 print("Saját szövegek előkészítve és elmentve.")
