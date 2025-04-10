@@ -1,0 +1,1 @@
+Ebben a mappában találhatóak a korpuszok összeállításának, ábrázolásának, tisztításának kódjai és ezeknek a folyamatoknak kimentései a 'databases' mappában, illetve az öt előfeldolgozás és azoknak modelljei mappánként szétbontva. 
