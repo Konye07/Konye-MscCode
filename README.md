@@ -32,7 +32,7 @@ Előfeldolgozási stratégiák
 Öt különböző előfeldolgozási stratégia került kidolgozásra és implementálásra. Mindegyikhez külön kódfájl tartozik, amelyeket háromféle adathalmazra alkalmaztam:
   Train adathalmaz (tanító)
   Test adathalmaz (teszteléshez)
-  Independent adathalmaz (általánosíthatóság tesztelésére)
+  Independent adathalmaz (általánosíthatóság tesztelésére, külső és saját korpuszra)
 
 LSTM és GRU modellek
 
@@ -42,6 +42,7 @@ A neurális hálók (LSTM és GRU) implementációja Google Colab környezetben 
   Tanítási és validálási metrikák
   Konfúziós mátrixok, F1-score, accuracy
   Különböző plotok
+Ezek mind le lettek töltve és mindegyik előfeldolgozási módszernél a model mappában vannak megjelenítve.
 
 Korpuszok:
 Az összes adat nagy méretük miatt nem szerepelnek közvetlenül a repóban. Az összes használt adathalmaz elérhetősége külön .txt fájlban található, forrásonként megjelölve.
